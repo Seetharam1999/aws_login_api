@@ -1,0 +1,14 @@
+DataBase create:
+    create database aws_login;
+
+table Create:
+    create table users(id int not Null AUTO_INCREMENT,username varchar(20),
+        nickname varchar(20),
+        email varchar(50),
+        phonenumbe varchar(20),
+        password varchar(255),
+        PRIMARY KEY(id)
+    );
+view details;
+    select * from users;
+

@@ -2,16 +2,15 @@
 const {
     create,
     getUserByUserEmail,
-   // getUserByUserId,
-    //getUsers,
-    //updateUser,
-    //deleteUser
+ 
   } = require("./user.service");
   const { hashSync, genSaltSync, compareSync } = require("bcrypt");
   const { sign } = require("jsonwebtoken");
   const sesClient = require('../aws/aws_ses');
   module.exports = {
     createUser: (req, res) => {
+      res.header("Access-Control-Allow-Origin", '*');
+  res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,Authorization');
       const body = req.body;
       const salt = genSaltSync(10);
 	var email=(body.email).toString();
@@ -53,6 +52,8 @@ body.password = hashSync(random, 10);
      
     },
     login: (req, res) => {
+      res.header("Access-Control-Allow-Origin", '*');
+      res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,Authorization');
       const body = req.body;
 	var email=(body.email).toString();
       getUserByUserEmail(email, (err, results) => {
@@ -61,7 +62,7 @@ body.password = hashSync(random, 10);
           console.log(err);
         }
         if (!results) {
-		console.log("not email",results)
+	  	console.log("not email",results)
           return res.json({
             success: 0,
             data: "Invalid email or password"
@@ -76,10 +77,11 @@ body.password = hashSync(random, 10);
           const jsontoken = sign({ result: results }, "qwe1234", {
             expiresIn: "1h"
           });
-          return res.json({
+          return res.status(200).json({
             success: 1,
             message: "login successfully",
-            token: jsontoken
+            token: jsontoken,
+            data:results
           });
         } else {
 
@@ -90,18 +92,5 @@ body.password = hashSync(random, 10);
         }
       });
     },
-    // getUsers: (req, res) => {
-    //   getUsers((err, results) => {
-    //     if (err) {
-    //       console.log(err);
-    //       return;
-    //     }
-    //     return res.json({
-    //       success: 1,
-    //       data: results
-    //     });
-    //   });
-    // },
-    
-  };
+   };
   
